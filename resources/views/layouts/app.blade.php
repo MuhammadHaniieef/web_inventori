@@ -171,6 +171,20 @@
             .user-icon-container .tooltip {
                 right: -50px;
             }
+
+            .footer-content {
+                margin-left: 25px;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-section {
+                min-width: 100%;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
         }
 
         body {
@@ -308,7 +322,6 @@
             text-decoration: none;
             color: var(--acc-color);
             border-radius: 24px 0 0 24px;
-            /* Rounded di kiri atas dan kiri bawah */
         }
 
         .menu-content li a span.material-symbols-outlined {
@@ -328,7 +341,6 @@
             position: relative;
         }
 
-        /* Hover effect */
         .menu-content li a:hover span.material-symbols-outlined {
             background: var(--meramera);
         }
@@ -338,7 +350,6 @@
             transform: translateX(10px);
         }
 
-        /* Active state */
         .menu-content li a span.active {
             background: var(--meramera);
             color: var(--acc-color);
@@ -350,7 +361,6 @@
             color: var(--acc-color);
         }
 
-        /* Background effect on hover */
         .menu-content li a::before {
             content: '';
             position: absolute;
@@ -364,14 +374,12 @@
             transform-origin: left;
             transition: transform 0.3s ease;
             border-radius: 24px 0 0 24px;
-            /* Rounded di kiri atas dan kiri bawah */
         }
 
         .menu-content li a:hover::before {
             transform: scaleX(1);
         }
 
-        /* Active state pseudo-elements */
         .menu-content li a span.active::before {
             content: "";
             position: absolute;
@@ -381,9 +389,7 @@
             height: 20px;
             background: transparent;
             border-bottom-left-radius: 20px;
-            /* Lingkaran di kanan atas */
             box-shadow: -5px 5px 0 5px var(--bg-color);
-            /* Bayangan ke kiri bawah */
             z-index: -1;
             opacity: 1;
         }
@@ -397,9 +403,7 @@
             height: 20px;
             background: transparent;
             border-top-left-radius: 20px;
-            /* Lingkaran di kanan bawah */
             box-shadow: -5px -5px 0 5px var(--bg-color);
-            /* Bayangan ke kiri atas */
             z-index: -1;
             opacity: 1;
         }
@@ -422,6 +426,75 @@
             border: 0.2rem solid var(--acc-color);
             width: 100%;
             margin: 0 10px;
+        }
+
+        footer {
+            background-color: var(--birusepuh);
+            color: var(--acc-color);
+            padding: 20px 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .footer-section p {
+            margin: 5px 0;
+        }
+
+        .footer-section a {
+            color: var(--acc-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--meramera);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            color: var(--acc-color);
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--meramera);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid var(--primary-color);
+        }
+
+        .footer-bottom p {
+            margin: 0;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -481,6 +554,13 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('toolscategories.index') }}">
+                            <span
+                                class="material-symbols-outlined {{ request()->routeIs('toolscategories.index') ? 'active' : '' }}">home_repair_service</span>
+                            <span class="txt-sb">Kategori tool</span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('tools.create') }}">
                             <span
                                 class="material-symbols-outlined {{ request()->routeIs('tools.create') ? 'active' : '' }}">build</span>
@@ -492,13 +572,6 @@
                             <span
                                 class="material-symbols-outlined {{ request()->routeIs('iBrgDtg') ? 'active' : '' }}">hourglass_pause</span>
                             <span class="txt-sb">Barang datang</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('toolscategories.index') }}">
-                            <span
-                                class="material-symbols-outlined {{ request()->routeIs('toolscategories.index') ? 'active' : '' }}">home_repair_service</span>
-                            <span class="txt-sb">Kategori tool</span>
                         </a>
                     </li>
                     <li>
@@ -548,7 +621,48 @@
                 <div class="tooltip">Halo {{ Auth::user()->name }}</div>
             </div>
         @endauth
+
     </div>
+    <footer>
+        <div class="footer-content">
+            <!-- Bagian Tentang Kami -->
+            <div class="footer-section">
+                <h4>Tentang Kami</h4>
+                <p>Kami adalah tim yang berdedikasi untuk </br> menyediakan solusi manajemen inventaris terbaik.</p>
+            </div>
+
+            <!-- Bagian Kontak -->
+            <div class="footer-section">
+                <h4>Kontak</h4>
+                <p>Email: support@inventorymicro.com</p>
+                <p>Telepon: +62 123 4567 890</p>
+            </div>
+
+            <!-- Bagian Tautan Cepat -->
+            <div class="footer-section">
+                <h4>Tautan Cepat</h4>
+                <p><a href="{{ route('preview') }}">Beranda</a></p>
+                <p><a href="{{ route('dashboard') }}">Dashboard</a></p>
+                <p><a href="{{ route('login') }}">Login</a></p>
+            </div>
+
+            <!-- Bagian Sosial Media -->
+            <div class="footer-section">
+                <h4>Sosial Media</h4>
+                <div class="social-links">
+                    <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bagian Hak Cipta -->
+        <div class="footer-bottom">
+            <p>&copy; {{ date('Y') }} Inventory Micro Controller. All rights reserved.</p>
+        </div>
+    </footer>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>

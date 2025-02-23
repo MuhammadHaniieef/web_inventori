@@ -248,7 +248,7 @@
                     <div class="card-header">
                         <h5 class="card-title">Perbandingan Barang Masuk dan Keluar (Bulan
                             {{ date('F Y', strtotime($selectedMonth)) }})</h5>
-                        <form method="GET" action="{{ route('dashboard') }}" id="form-tgl">
+                        <form method="GET" action="{{ route('dashboard') }}" id="form-bln">
                             <div class="form-group">
                                 <label for="selected_month" class="mr-2">Pilih Bulan:</label>
                                 <input type="month" name="selected_month" id="slMonth" class="form-control"
@@ -268,8 +268,8 @@
     <!-- Include ApexCharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        document.querySelector("#form-tgl").onchange = function(e) {
-            document.querySelector("#frm").submit();
+        document.querySelector("#slMonth").onchange = function(e) {
+            document.querySelector("#form-bln").submit();
         }
 
         document.addEventListener("DOMContentLoaded", function() {
