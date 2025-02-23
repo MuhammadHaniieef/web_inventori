@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Box;
 use App\Models\Category;
 use App\Models\Role;
+use App\Models\ToolCategory;
 use App\Models\User;
 use App\Models\UserRole;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -68,13 +69,17 @@ class DatabaseSeeder extends Seeder
             'name' => 'Micro',
             'description' => 'Barang-barang di micro',
         ]);
+        
+        ToolCategory::create([
+            'name' => 'Obeng',
+            'description' => 'wkwk',
+        ]);
 
         Box::create([
             'code' => 'A001',
-            'description' => 'A01',
+            'description' => 'CB Box',
             'position' => 'Z01',
             'detail_position' => 'Rak paling kiri di barisan kanan',
-            'type' => 'plastic',
             'size' => 'medium',
             'created_at' => now(),
             'updated_at' => now(),

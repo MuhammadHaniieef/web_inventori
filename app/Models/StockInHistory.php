@@ -5,19 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StockHistory extends Model
+class StockInHistory extends Model
 {
     use HasFactory;
 
-    protected $guarded =[];
+    protected $guarded = [];
 
     public function item()
     {
         return $this->belongsTo(Item::class);
     }
 
+    public function tool()
+    {
+        return $this->belongsTo(Tool::class);
+    }
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id',);
+        return $this->belongsTo(User::class, 'user_id', );
     }
 }

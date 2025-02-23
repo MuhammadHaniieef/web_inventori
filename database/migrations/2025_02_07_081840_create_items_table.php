@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -19,9 +18,10 @@ return new class extends Migration
             $table->foreignId('category_id')->nullable()->constrained();
             $table->integer('stock');
             $table->string('unit');
-            $table->boolean('requires_approval')->default(false);
-            $table->foreignId('created_by')->constrained('users', 'id');
-            $table->foreignId('updated_by')->constrained('users', 'id');
+            $table->text('image_path')->nullable();
+            $table->enum('status', ['waiting', 'assigned'])->default('waiting');
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }

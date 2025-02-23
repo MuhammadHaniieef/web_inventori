@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Box;
+use App\Models\Category;
+use App\Models\Loan;
 use App\Models\Item;
+use App\Models\StockInHistory;
+use App\Models\StockOutHistory;
+use App\Models\Take;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -28,7 +33,6 @@ class BoxController extends Controller
             'code' => 'required|string|unique:boxes,code',
             'description' => 'nullable|string',
             'position' => 'required|string',
-            'type' => 'nullable|in:plastic,alumunium,iron,cardboard',
             'size' => 'nullable|in:large,medium,small',
         ]);
 
@@ -37,20 +41,158 @@ class BoxController extends Controller
             'description' => $request->description,
             'position' => $request->position,
             'detail_position' => $request->detail_position,
-            'type' => $request->type,
             'size' => $request->size,
         ]);
 
         return redirect()->route('boxes.index')->with('success', 'Box created successfully.');
     }
 
-    public function show(Box $box)
+    public function show(Request $request, Box $box)
     {
-        $items = Item::where('box_id', $box->id)->get();
+        // $items = Item::where('box_id', $box->id)->get();
+        // return view('boxes.show', compact('box', 'items'));
 
-        return view('boxes.show', compact('box', 'items'));
+        // if (!session('qr_scanned_' . $box->id)) {
+        // return redirect()->route('welcome')->with('error', 'Akses ditolak! Scan QR terlebih dahulu.');
+        // } else {
+        // }
+        return view('boxes.show', compact('box'));
     }
 
+    public function submitBoxForm(Request $request, Box $box)
+    {
+        $request->validate([
+            'name' => 'nullable|string|max:255',
+            'division' => 'required|string|max:255',
+        ]);
+
+        session([
+            'name' => $request->name,
+            'division' => $request->division,
+            'box' => $box->id,
+        ]);
+        return redirect()->route('boxes.details', ['box' => $box]);
+    }
+
+    public function showBoxDetails(Box $box)
+    {
+        if (!session('name') && !session('division')) {
+            return redirect()->route('boxes.show', $box->id)->with('error', 'Isi form terlebih dahulu');
+        } else {
+            $categories = Category::all();
+            $boxesList = Box::all();
+            $name = session('name');
+            $division = session('division');
+
+            $items = Item::where('box_id', $box->id)->get();
+
+            return view('boxes.details', compact('name', 'division', 'items', 'box', 'boxesList', 'categories'));
+        }
+    }
+
+    public function adminBoxDetails(Box $box)
+    {
+        if (!Auth::check() && !Auth::user()->roles[0]->id == 1) {
+            return redirect()->route('boxes.show', $box->id)->with('error', 'Isi form terlebih dahulu');
+        } else {
+            $categories = Category::all();
+            $boxesList = Box::all();
+            $name = session('name');
+            $division = session('division');
+
+            $items = Item::where('box_id', $box->id)->get();
+
+            return view('admin.box.details', compact('name', 'division', 'items', 'box', 'boxesList', 'categories'));
+        }
+    }
+
+    public function BarangUpdate(Request $request)
+    {
+        foreach ($request->items as $id => $itemData) {
+            $item = Item::find($id);
+            if ($item) {
+                $previousStock = $item->stock;
+                $item->update([
+                    'name' => $itemData['name'],
+                    'stock' => $itemData['stock'],
+                    'updated_by' => session('name'),
+                ]);
+
+                StockInHistory::create([
+                    'item_id' => $item->id,
+                    'previous_stock' => $previousStock,
+                    'qty' => $itemData['stock'] - $previousStock,
+                    'new_stock' => $itemData['stock'],
+                    'type' => 'update',
+                    'user_id' => Auth::user()->id,
+                ]);
+            }
+        }
+
+
+        return redirect()->back()->with('success', 'Updated successfully.');
+    }
+
+    public function AmbilBarang(Request $request)
+    {
+        foreach ($request->items as $itemData) {
+            $item = Item::findOrFail($itemData['id']);
+
+            if ($itemData['qty'] > $item->stock) {
+                return redirect()->back()->with('error', 'Stok ' . $item->name . ' tidak mencukupi.');
+            }
+
+            Take::create([
+                'name' => session('name'),
+                'division' => session('division'),
+                'item_id' => $itemData['id'],
+                'qty' => $itemData['qty'],
+                'taken_at' => now(),
+            ]);
+
+            $previousStock = $item->stock;
+            $item->decrement('stock', $itemData['qty']);
+
+            StockOutHistory::create([
+                'name' => session('name'),
+                'division' => session('division'),
+                'item_id' => $item->id,
+                'previous_stock' => $previousStock,
+                'qty' => $itemData['qty'],
+                'new_stock' => $previousStock - $itemData['qty'],
+                'type' => 'take',
+            ]);
+        }
+        return redirect()->route('preview')->with('success', 'Peminjaman berhasil diajukan.');
+    }
+
+    public function TambahBarang(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'category_id' => 'nullable|exists:categories,id',
+            'box_id' => 'nullable|exists:boxes,id',
+            'stock' => 'required|integer|min:0',
+            'unit' => 'required|string|max:50',
+        ]);
+
+        $item = Item::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+            'box_id' => $request->box_id,
+            'stock' => $request->stock,
+            'unit' => $request->unit,
+            'created_by' => session('name'),
+            'updated_by' => session('name'),
+            'requires_approval' => 0,
+        ]);
+
+        // dd($item);
+
+        return redirect()->back()->with('success', 'Item berhasil ditambahkan!');
+    }
 
     public function edit(Box $box)
     {

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,16 +12,14 @@ return new class extends Migration
     {
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('guest_name')->nullable();
+            $table->string('name');
             $table->string('division');
-            $table->string('phone');
+            $table->foreignId('tool_id')->nullable()->constrained('tools', 'id');
             $table->integer('qty');
-            $table->enum('type', ['ambil', 'pinjam']);
-            $table->timestamp('borrowed_at')->nullable();
+            $table->string('phone')->nullable();
+            $table->timestamp('borrowed_at');
+            $table->boolean('returned')->default(false);
             $table->timestamp('returned_at')->nullable();
-            $table->enum('status', ['pending', 'approved', 'returned', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

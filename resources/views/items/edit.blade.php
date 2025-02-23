@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
         <h1>Edit Item</h1>
-        <form method="POST" action="{{ route('items.update', $item->id) }}">
+        <form method="POST" action="{{ route('items.update', $item->id) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -35,7 +35,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="description">Deskripsi</label>
+                <label for="description">Deskripsi (Opsional)</label>
                 <textarea class="form-control" name="description">{{ old('description', $item->description) }}</textarea>
             </div>
 
@@ -51,12 +51,26 @@
             </div>
 
             <div class="mb-3">
+                <label for="image">Upload Gambar</label>
+                <input type="file" name="image" id="image" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="image_url">Atau Masukkan URL Gambar</label>
+                <input type="url" name="image_url" id="image_url" class="form-control"
+                    placeholder="https://example.com/image.jpg">
+            </div>
+
+            {{-- <div class="mb-3">
                 <label for="requires_approval">Requires Approval</label>
                 <select name="requires_approval" id="requires_approval" class="form-control">
-                    <option value="1" {{ old('requires_approval', $item->requires_approval ?? '') == '1' ? 'selected' : '' }}>Perlu</option>
-                    <option value="0" {{ old('requires_approval', $item->requires_approval ?? '') == '0' ? 'selected' : '' }}>Tidak Perlu</option>
+                    <option value="1"
+                        {{ old('requires_approval', $item->requires_approval ?? '') == '1' ? 'selected' : '' }}>Perlu
+                    </option>
+                    <option value="0"
+                        {{ old('requires_approval', $item->requires_approval ?? '') == '0' ? 'selected' : '' }}>Tidak Perlu
+                    </option>
                 </select>
-            </div>
+            </div> --}}
 
             <button type="submit" class="btn btn-success">Update</button>
         </form>

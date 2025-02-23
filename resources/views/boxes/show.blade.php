@@ -1,101 +1,353 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Peminjaman / Pengambilan Barang</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('content')
     <style>
-        body {
-            background-color: #f4f6f9;
+        :root {
+            --primary-color: #547c90;
+            --sec-color: #265166;
+            --acc-color: #f6fafd;
+            --bg-color: #d0f1e6;
+            --pungki: #f1dcd0;
+            --meramera: #ca4c44;
+            --birusepuh: #1e3745;
+            --birupemula: #bacfda;
+            --abusepuh: #414a4e;
+        }
+
+        .material-symbols-outlined {
+            /* font-size: 24px; */
+            padding: 0.7rem 0.9rem;
+            background: var(--primary-color);
+            color: var(--birupemula);
+            border-radius: 2.3rem;
+            margin-right: 0.5rem;
+        }
+
+        @media(max-width:768px) {
+            .form-cont {
+                background-color: rgba(255, 255, 255, 0.5);
+                box-shadow: 0px 10px 30px rgba(30, 55, 69, 0.2);
+                border-radius: 24px;
+                border-bottom-left-radius: 24px !important;
+                border-top-left-radius: 0 !important;
+                border-top-right-radius: 0 !important;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .form-control {
+                border-radius: 12px;
+                padding: 12px 20px;
+                border: 1px solid #ddd;
+                transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            }
+
+            .form-control:focus {
+                border-color: #0c0c0c;
+                box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+            }
+
+            .btn-submit {
+                background-color: #0c0c0c;
+                border: none;
+                border-radius: 24px;
+                color: #f5f5f5;
+                padding: 12px 20px;
+                font-size: 16px;
+                transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
+            }
+
+            .btn-submit span {
+                display: none;
+            }
+
+            .btn-submit i {
+                margin-left: 0;
+                font-size: 20px;
+            }
+
+            .btn-submit {
+                width: 40px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0;
+                border-radius: 50%;
+            }
+
+            .btn-submit:hover {
+                background-color: #050505;
+            }
+
+            .btn-submit i {
+                margin-left: 4px;
+                transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
+            }
+
+            .btn-submit:hover i {
+                transform: translateX(10px);
+            }
+
+            .btn-link {
+                color: #0c0c0c;
+                text-decoration: none;
+                transition: color 0.3s ease-in-out;
+            }
+
+            .form-check-input:checked {
+                background-color: #0c0c0c;
+                border-color: #0c0c0c;
+            }
+
+            .form-check-label {
+                color: #333;
+            }
+
+            .img-container {
+                height: 100% !important;
+                position: relative;
+                overflow: hidden;
+                border-radius: 24px;
+                border-top-right-radius: 24px !important;
+                border-bottom-left-radius: 0 !important;
+                border-bottom-right-radius: 0 !important;
+            }
+
+            .img-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(30, 55, 69, 0.7);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 20px;
+                color: white;
+                text-align: center !important;
+            }
+
+            .overlay-top {
+                padding-top: 10% !important;
+            }
+
+            .overlay-bottom {
+                display: none;
+            }
+
+            .overlay-top h2 {
+                font-size: 2rem !important;
+                font-weight: bold;
+            }
+
+            .overlay-top p {
+                font-size: 1rem !important;
+                font-weight: lighter;
+            }
+        }
+
+        .form-cont {
+            background-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0px 10px 30px rgba(30, 55, 69, 0.2);
+            border-radius: 24px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: 'Poppins', sans-serif;
         }
 
-        .form-container {
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
-        .btn-primary {
-            background-color: #007bff;
+        .form-control:focus {
+            border-color: #0c0c0c;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
+        }
+
+        .btn-submit {
+            background-color: #0c0c0c;
             border: none;
-            transition: 0.3s;
+            border-radius: 24px;
+            color: #f5f5f5;
+            padding: 12px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
+        .btn-submit:hover {
+            background-color: #050505;
+        }
+
+        .btn-submit i {
+            margin-left: 4px;
+            transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .btn-submit:hover i {
+            transform: rotate(45deg);
+        }
+
+        .btn-link {
+            color: #0c0c0c;
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .form-check-input:checked {
+            background-color: #0c0c0c;
+            border-color: #0c0c0c;
+        }
+
+        .form-check-label {
+            color: #333;
+        }
+
+        .img-container {
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 55, 69, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            color: white;
+            text-align: right;
+        }
+
+        .overlay-top {
+            padding-top: 20%;
+        }
+
+        .overlay-top h2 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .overlay-top p {
+            font-size: 1.2rem;
+            font-weight: lighter;
+        }
+
+        .overlay-bottom h2 {
+            font-size: 1.7rem;
+            font-weight: bold;
+        }
+
+        .overlay-bottom p {
+            font-size: 0.9rem;
+            font-weight: lighter;
+        }
+
+        input::placeholder {
+            font-style: italic;
+        }
+
+        #pwDiv i {
+            opacity: 0;
+            transform: translateY(-6px) rotate(0deg);
+            transition: all 0.3s ease-in-out;
+        }
+
+        #pwDiv:hover i,
+        #pwDiv i.active {
+            opacity: 1;
+            transform: translateY(0) rotate(360deg);
         }
     </style>
-</head>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="row w-100 d-flex justify-content-center h-75">
+            <div class="p-0 col-md-6 col-12" style="z-index: 999;">
+                <div class="img-container">
+                    <img src="https://www.logility.com/wp-content/uploads/2023/05/Unlocking-the-power-of-Inventory-Control-Techniques-Header-1.png"
+                        alt="login-img">
+                    <div class="overlay">
+                        <div class="overlay-top">
+                            <h2>
+                                Inventory
+                            </h2>
 
-<body>
+                            <p>Website Inventory Micro Controller</p>
 
-    <div class="form-container">
-        <h2 class="text-center mb-4">Pinjam / Ambil Barang</h2>
-
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
-
-        <form action="{{ route('loans.store') }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label for="item_id" class="form-label">Pilih Barang</label>
-                <select name="item_id" id="item_id" class="form-control" required>
-                    <option value="">-- Pilih Barang --</option>
-                    @foreach ($items as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }} (Stok: {{ $item->stock }})</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="qty" class="form-label">Jumlah</label>
-                <input type="number" name="qty" id="qty" class="form-control" min="1" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="type" class="form-label">Jenis</label>
-                <select name="type" id="type" class="form-control" required>
-                    <option value="pinjam">Pinjam</option>
-                    <option value="ambil">Ambil</option>
-                </select>
-            </div>
-
-            @guest
-                <div class="mb-3">
-                    <label for="guest_name" class="form-label">Nama Peminjam</label>
-                    <input type="text" name="guest_name" id="guest_name" class="form-control">
+                            <hr>
+                        </div>
+                        <div class="overlay-bottom">
+                            <h2>Chill guy</h2>
+                            <p>Contact: +62 876 5432 1098</p>
+                        </div>
+                    </div>
                 </div>
-            @endguest
-
-            <div class="mb-3">
-                <label for="division" class="form-label">Divisi</label>
-                <input type="text" name="division" id="division" class="form-control" required>
             </div>
+            <div class="p-4 col-md-6 col-12 form-cont text-star"
+                style="margin-left: -1%; border-radius: 24px; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                <h2 class="mb-4" style="color: #333;">Form ambil barang di Box {{ $box->code }}</h2>
+                <form action="{{ route('boxes.submit', $box->id) }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nama Peminjam</label>
+                        <input type="text" name="name" id="name" class="form-control" required>
+                        <small class="text-muted fst-italic">Gunakan Kapital di awal, <strong>*Contoh: Muhammad
+                                Zaid</strong></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="division" class="form-label">Divisi</label>
+                        <select name="division" id="division" class="form-control pilih-divisi">
+                            <option value="Micro">Micro</option>
+                            <option value="Support">Support</option>
+                            <option value="Inventory">Inventory</option>
+                            <option value="Programmer">Programmer</option>
+                            <option value="Lain">Lainnya</option>
+                        </select>
 
-            <div class="mb-3">
-                <label for="phone" class="form-label">Nomor Telepon</label>
-                <input type="text" name="phone" id="phone" class="form-control" required>
+                        <input type="text" name="division" id="divisilain" class="form-control d-none mt-3" required>
+                    </div>
+                    <button type="submit" class="btn-submit w-100"><span>Ajukan</span> <i
+                            class="fas fa-rocket"></i></button>
+                </form>
             </div>
-
-            <button type="submit" class="btn btn-primary w-100">Ajukan</button>
-        </form>
+        </div>
     </div>
+    <script>
+        document.querySelectorAll('.pilih-divisi').forEach(select => {
+            select.addEventListener('change', function() {
+                let selectedValue = this.value;
+                let divisilain = document.getElementById('divisilain');
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+                if (selectedValue === 'Lain') {
+                    divisilain.classList.remove('d-none');
+                } else {
+                    divisilain.classList.add('d-none');
+                }
+            });
+        });
+    </script>
+@endsection

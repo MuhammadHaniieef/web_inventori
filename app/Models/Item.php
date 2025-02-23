@@ -22,34 +22,19 @@ class Item extends Model
         return $this->belongsTo(Box::class);
     }
 
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
-    public function updatedBy()
-    {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
-
-    public function sHI()
-    {
-        return $this->hasMany(StockHistory::class);
-    }
+    // public function sHI()
+    // {
+    //     return $this->hasMany(StockHistory::class);
+    // }
 
     // 🔥 Fungsi untuk mengupdate stok & simpan riwayat stok
-    
 
-    protected static function boot()
+    public function takes()
     {
-        parent::boot();
+        return $this->hasMany(Take::class, 'item_id');
+    }
 
-        static::saving(function ($model) {
-            Log::info('Unit sebelum disimpan: ' . $model->unit);
-        });
-
-        static::saved(function ($model) {
-            Log::info('Unit setelah disimpan: ' . $model->unit);
-        });
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

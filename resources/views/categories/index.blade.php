@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container-fluid">
+        @if (session('success'))
+            <div class="my-3 alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="my-3 alert alert-danger">{{ session('error') }}</div>
+        @endif
+
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <h2>Categories</h2>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">Add Category</button>
@@ -9,7 +16,7 @@
 
         <div class="row">
             @foreach ($categories as $category)
-                <div class="mb-3 col-md-4">
+                <div class="mb-3 col-md-2">
                     <div class="card border-{{ ['primary', 'success', 'danger', 'warning', 'info'][rand(0, 4)] }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ $category->name }}</h5>
@@ -47,7 +54,9 @@
                                         <label class="form-label">Description</label>
                                         <textarea class="form-control" name="description">{{ $category->description }}</textarea>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <div class="d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-primary w-75">Update</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -75,7 +84,9 @@
                                 <label class="form-label">Description</label>
                                 <textarea class="form-control" name="description"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary w-75">Save</button>
+                            </div>
                         </form>
                     </div>
                 </div>

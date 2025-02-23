@@ -5,6 +5,7 @@
         .qr-container {
             position: relative;
             display: inline-block;
+            transition: all 0.5s ease-in-out;
         }
 
         .download-btn {
@@ -13,8 +14,8 @@
             left: 50%;
             transform: translate(-50%, -50%);
             display: none;
-            opacity: 0.9;
-            transition: opacity 0.2s ease-in-out;
+            opacity: 1;
+            transition: all 0.5s ease-in-out;
         }
 
         .qr-container:hover .download-btn {
@@ -26,62 +27,67 @@
     <div class="px-5 container-fluid">
         <h1 class="mb-4">Daftar Box</h1>
 
-        <!-- Button to trigger modal -->
         <a href="{{ route('boxes.create') }}" class="mb-3 btn btn-primary">
             Tambah Box
         </a>
 
-        <!-- Alert jika ada pesan sukses -->
         @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="my-3 alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="my-3 alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>No</th>
-                    <th>Kode</th>
-                    <th>Deskripsi</th>
-                    <th>Posisi</th>
-                    <th>Jenis</th>
-                    <th>Ukuran</th>
-                    <th>QR Code</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($boxes as $box)
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-primary">
                     <tr>
-                        <td>{{ $loop->iteration }}.</td>
-                        <td>{{ $box->code }}</td>
-                        <td>{{ $box->description }}</td>
-                        <td>{{ $box->position }}</td>
-                        <td>{{ ucfirst($box->type) }}</td>
-                        <td>{{ ucfirst($box->size) }}</td>
-                        <td>
-                            <div class="qr-container" onmouseover="showDownloadBtn({{ $box->id }})"
-                                onmouseout="hideDownloadBtn({{ $box->id }})">
-                                <div id="qrcode-{{ $box->id }}"></div>
-                                <button id="download-btn-{{ $box->id }}" class="download-btn btn btn-success btn-sm"
-                                    onclick="downloadQRCode({{ $box->id }})">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                            </div>
-                        </td>
-                        <td>
-                            <a href="{{ route('boxes.edit', $box->id) }}" class="btn btn-warning btn-sm">Edit</a>
-
-                            <form action="{{ route('boxes.destroy', $box->id) }}" method="POST" class="d-inline"
-                                onsubmit="return confirm('Hapus box ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                            </form>
-                        </td>
+                        <th>No</th>
+                        <th>Kode</th>
+                        <th>Deskripsi</th>
+                        <th>Posisi</th>
+                        <th>Ukuran</th>
+                        <th>QR Code</th>
+                        <th>Aksi</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($boxes as $box)
+                        <tr>
+                            <td>{{ $loop->iteration }}.</td>
+                            <td>{{ $box->code }}</td>
+                            <td>{{ $box->description }}</td>
+                            <td>{{ $box->position }}</td>
+                            <td>{{ ucfirst($box->size) }}</td>
+                            <td>
+                                <div class="qr-container" onmouseover="showDownloadBtn({{ $box->id }})"
+                                    onmouseout="hideDownloadBtn({{ $box->id }})">
+                                    <div id="qrcode-{{ $box->id }}"></div>
+                                    <button id="download-btn-{{ $box->id }}"
+                                        class="download-btn btn btn-success btn-sm"
+                                        onclick="downloadQRCode({{ $box->id }})">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="{{ route('admin.boxes.details', $box->id) }}" class="btn btn-info">Admin Box
+                                    Details</a>
+
+                                <a href="{{ route('boxes.edit', $box->id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                                <form action="{{ route('boxes.destroy', $box->id) }}" method="POST" class="d-inline"
+                                    onsubmit="return confirm('Hapus box ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -89,6 +95,7 @@
             @foreach ($boxes as $box)
                 new QRCode(document.getElementById("qrcode-{{ $box->id }}"), {
                     text: "{{ route('boxes.show', $box->id) }}",
+                    // text: "{{ route('boxes.show', $box->id) }}?scanned=true",
                     width: 120,
                     height: 120,
                     correctLevel: QRCode.CorrectLevel.H
