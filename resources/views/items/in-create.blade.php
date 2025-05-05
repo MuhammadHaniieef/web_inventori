@@ -114,7 +114,7 @@
 
     <div class="container-fluid">
         <h1>Tambah Item</h1>
-        <form method="POST" action="{{ route('items.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('sBrgDtg') }}" enctype="multipart/form-data">
             @csrf
             <div class="row mb-3">
                 <!-- Nama dan Box -->
@@ -160,7 +160,27 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="unit">Unit</label>
-                        <input type="text" class="form-control" name="unit" value="{{ old('unit') }}" required>
+                        <select name="unit" id="unit"
+                            class="form-control pilih-unit @error('unit') is-invalid @enderror">
+                            <option value="" {{ old('unit') == '' ? 'selected' : '' }}>--Pilih unit--</option>
+                            <option value="Pcs" {{ old('unit') == 'Pcs' ? 'selected' : '' }}>Pcs</option>
+                            <option value="Pack" {{ old('unit') == 'Pack' ? 'selected' : '' }}>Pack</option>
+                            <option value="Box" {{ old('unit') == 'Box' ? 'selected' : '' }}>Box
+                            </option>
+                            <option value="Meter" {{ old('unit') == 'Meter' ? 'selected' : '' }}>Meter
+                            </option>
+                            <option value="Liter" {{ old('unit') == 'Liter' ? 'selected' : '' }}>Liter
+                            </option>
+                            <option value="Lain" {{ old('unit') == 'Lain' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
+                        <input type="text" name="unit" id="unitlain"
+                            class="form-control d-none mt-3 @error('unit') is-invalid @enderror"
+                            value="{{ old('unit') }}">
+                        @error('unit')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -201,6 +221,23 @@
 
     <!-- Script untuk Preview Gambar -->
     <script>
+        document.querySelectorAll('.pilih-unit').forEach(select => {
+            select.addEventListener('change', function() {
+                let selectedValue = this.value;
+                let unitlain = document.getElementById('unitlain');
+
+                if (selectedValue === 'Lain') {
+                    unitlain.classList.remove('d-none');
+                    unitlain.setAttribute('required', true);
+                    unitlain.disabled = false;
+                } else {
+                    unitlain.classList.add('d-none');
+                    unitlain.removeAttribute('required');
+                    unitlain.disabled = true;
+                }
+            });
+        });
+
         function previewImage(event) {
             const input = event.target;
             const preview = document.getElementById('preview-image');

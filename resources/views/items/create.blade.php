@@ -116,7 +116,7 @@
         <h1>Tambah Item</h1>
         <form method="POST" action="{{ route('items.store') }}" enctype="multipart/form-data">
             @csrf
-            <div class="row mb-3">
+            <div class="mb-3 row">
                 <!-- Nama dan Box -->
                 <div class="col-md-4">
                     <div class="form-group">
@@ -152,7 +152,7 @@
             </div>
 
             <!-- Category dan Deskripsi -->
-            <div class="row mb-3">
+            <div class="mb-3 row">
                 <div class="col-12">
                     <div class="form-group">
                         <label for="description">Deskripsi (Opsional)</label>
@@ -162,7 +162,7 @@
             </div>
 
             <!-- Stok dan Unit -->
-            <div class="row mb-3">
+            <div class="mb-3 row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="stock">Stok</label>
@@ -172,13 +172,33 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="unit">Unit</label>
-                        <input type="text" class="form-control" name="unit" value="{{ old('unit') }}" required>
+                        <select name="unit" id="unit"
+                            class="form-control pilih-unit @error('unit') is-invalid @enderror">
+                            <option value="" {{ old('unit') == '' ? 'selected' : '' }}>--Pilih unit--</option>
+                            <option value="Pcs" {{ old('unit') == 'Pcs' ? 'selected' : '' }}>Pcs</option>
+                            <option value="Pack" {{ old('unit') == 'Pack' ? 'selected' : '' }}>Pack</option>
+                            <option value="Box" {{ old('unit') == 'Box' ? 'selected' : '' }}>Box
+                            </option>
+                            <option value="Meter" {{ old('unit') == 'Meter' ? 'selected' : '' }}>Meter
+                            </option>
+                            <option value="Liter" {{ old('unit') == 'Liter' ? 'selected' : '' }}>Liter
+                            </option>
+                            <option value="Lain" {{ old('unit') == 'Lain' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
+                        <input type="text" name="unit" id="unitlain"
+                            class="form-control d-none mt-3 @error('unit') is-invalid @enderror"
+                            value="{{ old('unit') }}">
+                        @error('unit')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                 </div>
             </div>
 
             <!-- Upload Gambar -->
-            <div class="row mb-3">
+            <div class="mb-3 row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="image">Upload Gambar</label>
@@ -189,7 +209,7 @@
                         </div>
                         <input type="file" name="image" id="image" class="form-control"
                             onchange="previewImage(event)">
-                        <button type="button" class="btn btn-danger mt-2" id="remove-image" style="display: none;"
+                        <button type="button" class="mt-2 btn btn-danger" id="remove-image" style="display: none;"
                             onclick="removeImage()"><i class="fas fa-circle-xmark"></i></button>
                     </div>
                 </div>
@@ -205,14 +225,31 @@
             </div>
 
             <!-- Tombol Simpan -->
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-success w-75 mt-3">Simpan</button>
+            <div class="text-center form-group">
+                <button type="submit" class="mt-3 btn btn-success w-75">Simpan</button>
             </div>
         </form>
     </div>
 
     <!-- Script untuk Preview Gambar -->
     <script>
+        document.querySelectorAll('.pilih-unit').forEach(select => {
+            select.addEventListener('change', function() {
+                let selectedValue = this.value;
+                let unitlain = document.getElementById('unitlain');
+
+                if (selectedValue === 'Lain') {
+                    unitlain.classList.remove('d-none');
+                    unitlain.setAttribute('required', true);
+                    unitlain.disabled = false;
+                } else {
+                    unitlain.classList.add('d-none');
+                    unitlain.removeAttribute('required');
+                    unitlain.disabled = true;
+                }
+            });
+        });
+
         function previewImage(event) {
             const input = event.target;
             const preview = document.getElementById('preview-image');

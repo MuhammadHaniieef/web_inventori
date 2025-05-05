@@ -64,11 +64,25 @@
             font-weight: bold;
         }
 
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
         .table th,
         .table td {
-            padding: 12px 16px;
+            padding: 12px;
             text-align: left;
-            border-bottom: 2px solid var(--birupemula);
+            border-bottom: 1px solid var(--birupemula);
+        }
+
+        .table th {
+            background-color: var(--sec-color);
+            color: var(--acc-color);
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(30, 55, 69, 0.1);
         }
 
         .table th {
@@ -121,12 +135,10 @@
                 display: none !important;
             }
 
-            .icon-micro hr {
-                display: none !important;
-            }
-
-            .icon-micro img {
-                width: 85% !important;
+            .icon-micro i {
+                color: var(--acc-color);
+                font-size: 2.2rem !important;
+                margin-bottom: 1rem !important;
             }
 
             .table th,
@@ -189,7 +201,7 @@
 
         body {
             min-height: 100vh;
-            background: var(--bg-color);
+            background: var(--birupemula);
             margin: 0;
             padding: 0;
             color: var(--birusepuh);
@@ -209,7 +221,7 @@
             transition: .3s;
             scrollbar-width: none;
             overflow: hidden scroll;
-            background: var(--primary-color);
+            background: var(--birusepuh);
             -ms-overflow-style: none;
             padding: 20px 0;
             backdrop-filter: blur(5px);
@@ -259,7 +271,7 @@
         }
 
         .menu-content li:has(a span.active) {
-            background: var(--bg-color);
+            background: var(--birupemula);
         }
 
         .main-content {
@@ -368,7 +380,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-color);
+            background: var(--birupemula);
             z-index: 0;
             transform: scaleX(0);
             transform-origin: left;
@@ -389,7 +401,7 @@
             height: 20px;
             background: transparent;
             border-bottom-left-radius: 20px;
-            box-shadow: -5px 5px 0 5px var(--bg-color);
+            box-shadow: -5px 5px 0 5px var(--birupemula);
             z-index: -1;
             opacity: 1;
         }
@@ -403,7 +415,7 @@
             height: 20px;
             background: transparent;
             border-top-left-radius: 20px;
-            box-shadow: -5px -5px 0 5px var(--bg-color);
+            box-shadow: -5px -5px 0 5px var(--birupemula);
             z-index: -1;
             opacity: 1;
         }
@@ -418,8 +430,14 @@
             margin-bottom: 1rem;
         }
 
-        .icon-micro img {
-            width: 35%;
+        .icon-micro i {
+            color: var(--acc-color);
+            font-size: 4.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .icon-micro h1 {
+            color: var(--acc-color);
         }
 
         .icon-micro hr {
@@ -432,7 +450,11 @@
             background-color: var(--birusepuh);
             color: var(--acc-color);
             padding: 20px 0;
-            margin-top: auto;
+            /* margin-top: auto; */
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            border-top: 3px solid var(--sec-color);
         }
 
         .footer-content {
@@ -503,7 +525,7 @@
     <div id="app" class="d-flex">
         <nav class="menu">
             <div class="icon-micro">
-                <img src="https://www.svgrepo.com/show/303239/raspberry-pi-logo.svg" alt="icon" class="img-fluid">
+                <i class="fas fa-boxes-stacked"></i>
                 <h1 class="fw-bold">
                     Inventory
                 </h1>
@@ -529,7 +551,7 @@
                         <a href="{{ route('loans.dashboard') }}">
                             <span
                                 class="material-symbols-outlined {{ request()->routeIs('loans.dashboard') ? 'active' : '' }}">inventory_2</span>
-                            <span class="txt-sb">Pengambilan barang</span>
+                            <span class="txt-sb">Peminjaman Tool</span>
                         </a>
                     </li>
                     <li>
@@ -581,6 +603,13 @@
                             <span class="txt-sb">Kelola pengguna</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('manual.index') }}">
+                            <span
+                                class="material-symbols-outlined {{ request()->routeIs('manual') ? 'active' : '' }}">book</span>
+                            <span class="txt-sb">Manual</span>
+                        </a>
+                    </li>
                 @endif
                 @guest
                     @if (Route::has('login'))
@@ -609,7 +638,7 @@
 
 
         <!-- Main Content -->
-        <div class="main-content py-4 px-2">
+        <div class="px-2 py-4 main-content">
             @yield('content')
         </div>
 
@@ -623,7 +652,7 @@
         @endauth
 
     </div>
-    <footer>
+    {{-- <footer>
         <div class="footer-content">
             <!-- Bagian Tentang Kami -->
             <div class="footer-section">
@@ -662,7 +691,7 @@
         <div class="footer-bottom">
             <p>&copy; {{ date('Y') }} Inventory Micro Controller. All rights reserved.</p>
         </div>
-    </footer>
+    </footer> --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>

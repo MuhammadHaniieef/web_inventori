@@ -23,6 +23,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <div class="px-5 container-fluid">
         <h1 class="mb-4">Daftar Box</h1>
@@ -71,16 +72,20 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="{{ route('admin.boxes.details', $box->id) }}" class="btn btn-info">Admin Box
-                                    Details</a>
+                                <a href="{{ route('admin.boxes.details', $box->id) }}" class="btn btn-info"><i
+                                        class="fas fa-circle-info"></i></a>
 
-                                <a href="{{ route('boxes.edit', $box->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('boxes.edit', $box->id) }}" class="btn btn-warning btn-sm"><i
+                                        class="fas fa-pencil"></i></a>
 
-                                <form action="{{ route('boxes.destroy', $box->id) }}" method="POST" class="d-inline"
-                                    onsubmit="return confirm('Hapus box ini?')">
+                                <form id="delete-form-{{ $box->id }}" action="{{ route('boxes.destroy', $box->id) }}"
+                                    method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="confirmDelete({{ $box->id }}, '{{ $box->code }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -95,7 +100,6 @@
             @foreach ($boxes as $box)
                 new QRCode(document.getElementById("qrcode-{{ $box->id }}"), {
                     text: "{{ route('boxes.show', $box->id) }}",
-                    // text: "{{ route('boxes.show', $box->id) }}?scanned=true",
                     width: 120,
                     height: 120,
                     correctLevel: QRCode.CorrectLevel.H
@@ -131,6 +135,23 @@
                 link.download = `QR_Box_${boxId}.png`;
                 link.click();
             };
+        }
+
+        function confirmDelete(boxId, boxCode) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                html: `Box <b>${boxCode}</b> akan dihapus beserta data Barang yang ada di dalamnya.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-form-${boxId}`).submit();
+                }
+            });
         }
     </script>
 @endsection

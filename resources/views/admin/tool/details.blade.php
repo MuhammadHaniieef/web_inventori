@@ -50,7 +50,7 @@
 
         {{-- ambil barang --}}
         <div id="ambil-barang" class="d-none">
-            <form method="POST" action="{{ route('barangs.ambil') }}">
+            <form method="POST" action="{{ route('items.take') }}">
                 @csrf
                 <input type="hidden" name="name" value="{{ $name }}">
                 <input type="hidden" name="division" value="{{ $division }}">
@@ -92,7 +92,7 @@
 
         {{-- update nama / stock barang --}}
         <div id="update" class="d-none">
-            <form method="POST" action="{{ route('barangs.update') }}">
+            <form method="POST" action="{{ route('items.stock.update') }}">
                 @csrf
                 <div class="table-responsive">
                     <table class="table table-bordered">

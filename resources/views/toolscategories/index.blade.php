@@ -11,7 +11,8 @@
 
         <div class="mb-4 d-flex justify-content-between align-items-center">
             <h2>Tools Categories</h2>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createtcgModal">Add tcg</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createtcgModal"><i class="fas fa-plus"></i>
+                Tool Category</button>
         </div>
 
         <div class="row">
@@ -23,12 +24,8 @@
                             <p class="card-text">{{ $tcg->description }}</p>
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#edittcgModal{{ $tcg->id }}">Edit</button>
-                            <form action="{{ route('toolscategories.destroy', $tcg->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
+                            <button type="button" class="btn btn-danger btn-sm delete-btn"
+                                data-id="{{ $tcg->id }}">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -89,4 +86,50 @@
             </div>
         </div>
     </div>
+
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tangani klik tombol delete
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tcgId = this.getAttribute('data-id');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit form delete
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = `/toolscategories/${tcgId}`;
+                            form.style.display = 'none';
+
+                            const csrfToken = document.createElement('input');
+                            csrfToken.type = 'hidden';
+                            csrfToken.name = '_token';
+                            csrfToken.value = '{{ csrf_token() }}';
+                            form.appendChild(csrfToken);
+
+                            const methodInput = document.createElement('input');
+                            methodInput.type = 'hidden';
+                            methodInput.name = '_method';
+                            methodInput.value = 'DELETE';
+                            form.appendChild(methodInput);
+
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection

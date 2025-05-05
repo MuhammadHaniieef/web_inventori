@@ -110,7 +110,7 @@ class ItemController extends Controller
         $items = Item::where('status', 'waiting')->paginate(50);
         $boxes = Box::all();
 
-        // dd($items, $boxes);
+        // dd($items);
         return view('items.in', compact('items', 'boxes'));
     }
 
@@ -156,6 +156,9 @@ class ItemController extends Controller
             $imagePath = $request->input('image_url');
         }
 
+        // $imagePath = $request->file('image')->store('profile_pictures', 'public');
+        //     $user->image = $imagePath;
+
         $item = Item::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -167,8 +170,6 @@ class ItemController extends Controller
             'created_by' => Auth::user()->name ?? '-',
             'updated_by' => Auth::user()->name ?? '-',
         ]);
-
-        // dd($item);
 
         StockInHistory::create([
             'item_id' => $item->id,

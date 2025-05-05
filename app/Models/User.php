@@ -66,9 +66,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Item::class, 'updated_by');
     }
-
-    // public function sHU()
-    // {
-    //     return $this->hasMany(StockHistory::class);
-    // }
 }

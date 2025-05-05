@@ -10,15 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('tools', function (Blueprint $table) {
+        Schema::create('tools_storage', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->text('description')->nullable();
-            $table->foreignId('tool_category_id')->nullable()->constrained('tool_categories', 'id')->onDelete('cascade');
-            $table->integer('stock');
-            $table->text('image_path')->nullable();
-            $table->string('created_by')->nullable();
-            $table->string('updated_by')->nullable();
+            $table->string('position');
+            $table->string('detail_position')->nullable();
+            $table->enum('type', ['box', 'bag'])->nullable();
+            $table->enum('size', ['large', 'medium', 'small'])->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('tools');
+        Schema::dropIfExists('tools_storage');
     }
 };

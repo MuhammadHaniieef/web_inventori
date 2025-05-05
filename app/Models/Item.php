@@ -22,13 +22,6 @@ class Item extends Model
         return $this->belongsTo(Box::class);
     }
 
-    // public function sHI()
-    // {
-    //     return $this->hasMany(StockHistory::class);
-    // }
-
-    // 🔥 Fungsi untuk mengupdate stok & simpan riwayat stok
-
     public function takes()
     {
         return $this->hasMany(Take::class, 'item_id');

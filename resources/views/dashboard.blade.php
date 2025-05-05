@@ -18,11 +18,11 @@
         }
 
         .card {
-            background-color: var(--birusepuh);
-            border: 2px solid var(--abusepuh);
+            background-color: var(--primary-color);
+            border: 1px solid var(--abusepuh);
             border-radius: 10px;
             color: var(--acc-color);
-            box-shadow: 0 0 10px rgba(30, 55, 69, 0.3);
+            /* box-shadow: 0 0 10px rgba(30, 55, 69, 0.3); */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -46,28 +46,7 @@
         }
 
         .frequently-out-list li:hover {
-            background-color: var(--primary-color);
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table th,
-        .table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--birupemula);
-        }
-
-        .table th {
-            background-color: var(--sec-color);
-            color: var(--acc-color);
-        }
-
-        .table tbody tr:hover {
-            background-color: rgba(30, 55, 69, 0.1);
+            background-color: var(--birusepuh);
         }
 
         .card-header {

@@ -8,6 +8,7 @@ use App\Models\Tool;
 use App\Models\ToolCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ToolController extends Controller
@@ -35,9 +36,17 @@ class ToolController extends Controller
         $imagePath = null;
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images/tools', 'public');
+            Log::info('File ditemukan:', ['file' => $request->file('image')->getClientOriginalName()]);
+
+            try {
+                $imagePath = $request->file('image')->store('images/tools', 'public');
+                Log::info('File berhasil disimpan:', ['path' => $imagePath]);
+            } catch (\Exception $e) {
+                Log::error('Gagal menyimpan file:', ['error' => $e->getMessage()]);
+            }
         } elseif ($request->filled('image_url')) {
             $imagePath = $request->input('image_url');
+            Log::info('Menggunakan URL gambar:', ['url' => $imagePath]);
         }
 
         $tool = Tool::create([

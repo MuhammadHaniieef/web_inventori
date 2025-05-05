@@ -69,20 +69,32 @@ class DatabaseSeeder extends Seeder
             'name' => 'Micro',
             'description' => 'Barang-barang di micro',
         ]);
-        
+
+        Category::create([
+            'name' => 'Riset Phonebank',
+            'description' => 'Barang untuk projek riset phonebank',
+        ]);
+
+        Category::create([
+            'name' => 'Riset IOT',
+            'description' => 'Barang untuk projek riset IOT',
+        ]);
+
         ToolCategory::create([
             'name' => 'Obeng',
             'description' => 'wkwk',
         ]);
 
-        Box::create([
-            'code' => 'A001',
-            'description' => 'CB Box',
-            'position' => 'Z01',
-            'detail_position' => 'Rak paling kiri di barisan kanan',
-            'size' => 'medium',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        for ($i = 1; $i <= 10; $i++) {
+            $code = 'A' . str_pad($i, 3, '0', STR_PAD_LEFT);
+
+            Box::create([
+                'code' => $code,
+                'description' => 'CB Box',
+                'position' => 'A001-A010',
+                'detail_position' => 'Rak paling kiri di barisan kanan',
+                'size' => 'small',
+            ]);
+        }
     }
 }

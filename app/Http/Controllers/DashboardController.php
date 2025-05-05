@@ -45,10 +45,11 @@ class DashboardController extends Controller
             ->get();
 
         $sInHistories = StockInHistory::all();
-        $sOutHistories = StockOutHistory::all();
+        $takes = StockOutHistory::where('type', 'take')->get();
+        $loans = StockOutHistory::where('type', 'loan')->get();
 
         $inItems = Item::where('status', 'waiting')->get();
 
-        return view('preview', compact('sInHistories', 'sOutHistories', 'frequentlyOut', 'newlyAdded', 'inItems'));
+        return view('preview', compact('sInHistories', 'takes', 'loans', 'frequentlyOut', 'newlyAdded', 'inItems'));
     }
 }

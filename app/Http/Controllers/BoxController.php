@@ -61,16 +61,14 @@ class BoxController extends Controller
 
     public function submitBoxForm(Request $request, Box $box)
     {
-        $request->validate([
-            'name' => 'nullable|string|max:255',
-            'division' => 'required|string|max:255',
-        ]);
-
         session([
             'name' => $request->name,
             'division' => $request->division,
             'box' => $box->id,
         ]);
+
+        // dd(session()->all());
+
         return redirect()->route('boxes.details', ['box' => $box]);
     }
 
@@ -115,7 +113,7 @@ class BoxController extends Controller
                 $item->update([
                     'name' => $itemData['name'],
                     'stock' => $itemData['stock'],
-                    'updated_by' => session('name'),
+                    'updated_by' => Auth::user()->name,
                 ]);
 
                 StockInHistory::create([
@@ -166,34 +164,6 @@ class BoxController extends Controller
         return redirect()->route('preview')->with('success', 'Peminjaman berhasil diajukan.');
     }
 
-    public function TambahBarang(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:categories,id',
-            'box_id' => 'nullable|exists:boxes,id',
-            'stock' => 'required|integer|min:0',
-            'unit' => 'required|string|max:50',
-        ]);
-
-        $item = Item::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'box_id' => $request->box_id,
-            'stock' => $request->stock,
-            'unit' => $request->unit,
-            'created_by' => session('name'),
-            'updated_by' => session('name'),
-            'requires_approval' => 0,
-        ]);
-
-        // dd($item);
-
-        return redirect()->back()->with('success', 'Item berhasil ditambahkan!');
-    }
-
     public function edit(Box $box)
     {
         return view('boxes.edit', compact('box'));
@@ -205,7 +175,6 @@ class BoxController extends Controller
             'code' => 'required|string|unique:boxes,code,' . $box->id,
             'description' => 'nullable|string',
             'position' => 'required|string',
-            'type' => 'nullable|in:plastic,alumunium,iron,cardboard',
             'size' => 'nullable|in:large,medium,small',
         ]);
 
@@ -214,7 +183,6 @@ class BoxController extends Controller
             'description' => $request->description,
             'position' => $request->position,
             'detail_position' => $request->detail_position,
-            'type' => $request->type,
             'size' => $request->size,
         ]);
 

@@ -285,6 +285,12 @@
         }
     </style>
     <div class="container d-flex justify-content-center align-items-center vh-100">
+        @if (session('success'))
+            <div class="my-3 alert alert-success">{{ session('success') }}</div>
+        @endif
+        @if (session('error'))
+            <div class="my-3 alert alert-danger">{{ session('error') }}</div>
+        @endif
         <div class="row w-100 d-flex justify-content-center h-75">
             <div class="p-0 col-md-6 col-12" style="z-index: 999;">
                 <div class="img-container">
@@ -314,21 +320,37 @@
                     @csrf
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama Peminjam</label>
-                        <input type="text" name="name" id="name" class="form-control" required>
+                        <input type="text" name="name" id="name"
+                            class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
                         <small class="text-muted fst-italic">Gunakan Kapital di awal, <strong>*Contoh: Muhammad
                                 Zaid</strong></small>
+                        @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="division" class="form-label">Divisi</label>
-                        <select name="division" id="division" class="form-control pilih-divisi">
-                            <option value="Micro">Micro</option>
-                            <option value="Support">Support</option>
-                            <option value="Inventory">Inventory</option>
-                            <option value="Programmer">Programmer</option>
-                            <option value="Lain">Lainnya</option>
+                        <select name="division" id="division"
+                            class="form-control pilih-divisi @error('division') is-invalid @enderror">
+                            <option value="" {{ old('division') == '' ? 'selected' : '' }}>--Pilih Divisi--</option>
+                            <option value="Micro" {{ old('division') == 'Micro' ? 'selected' : '' }}>Micro</option>
+                            <option value="Support" {{ old('division') == 'Support' ? 'selected' : '' }}>Support</option>
+                            <option value="Inventory" {{ old('division') == 'Inventory' ? 'selected' : '' }}>Inventory
+                            </option>
+                            <option value="Programmer" {{ old('division') == 'Programmer' ? 'selected' : '' }}>Programmer
+                            </option>
+                            <option value="Lain" {{ old('division') == 'Lain' ? 'selected' : '' }}>Lainnya</option>
                         </select>
-
-                        <input type="text" name="division" id="divisilain" class="form-control d-none mt-3" required>
+                        <input type="text" id="divisilain"
+                            class="form-control d-none mt-3 @error('division') is-invalid @enderror"
+                            value="{{ old('division') }}">
+                        @error('division')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
                     </div>
                     <button type="submit" class="btn-submit w-100"><span>Ajukan</span> <i
                             class="fas fa-rocket"></i></button>
@@ -344,8 +366,10 @@
 
                 if (selectedValue === 'Lain') {
                     divisilain.classList.remove('d-none');
+                    divisilain.setAttribute('name', 'division');
                 } else {
                     divisilain.classList.add('d-none');
+                    divisilain.removeAttribute('name');
                 }
             });
         });

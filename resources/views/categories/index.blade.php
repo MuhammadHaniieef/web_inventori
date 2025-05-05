@@ -20,7 +20,7 @@
                     <div class="card border-{{ ['primary', 'success', 'danger', 'warning', 'info'][rand(0, 4)] }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ $category->name }}</h5>
-                            <p class="card-text">{{ $category->description }}</p>
+                            <p class="card-text">{{ Str::limit($category->description, 25) }}</p>
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#editCategoryModal{{ $category->id }}">Edit</button>
                             <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="d-inline">

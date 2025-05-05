@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->foreignId('box_id')->nullable()->constrained();
+            $table->foreignId('box_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->nullable()->constrained();
             $table->integer('stock');
             $table->string('unit');

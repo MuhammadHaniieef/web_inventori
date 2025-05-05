@@ -75,6 +75,12 @@
             bottom: 0;
         }
 
+        .table-container {
+            min-height: 400px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
         @media (max-width: 768px) {
             .overlay {
                 opacity: 1;
@@ -89,15 +95,15 @@
             <div class="my-3 alert alert-danger">{{ session('error') }}</div>
         @endif
 
+        <!-- Barang Masuk -->
         <div class="row mb-4">
-            <!-- Barang Masuk -->
             <div class="col-md-6 col-12">
                 <div class="card">
                     <div class="text-white card-header bg-success">
                         <h5>Barang Masuk</h5>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive table-container">
                             <table class="table table-striped table-bordered">
                                 <thead class="table-primary">
                                     <tr>
@@ -108,7 +114,6 @@
                                         <th>Jumlah</th>
                                         <th>Sesudah</th>
                                         <th>Tipe</th>
-                                        {{-- <th>Image</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -130,27 +135,6 @@
                                                     <span class="badge bg-danger">Kembalian</span>
                                                 @endif
                                             </td>
-                                            {{-- <td>
-                                                @if (optional($history->item)->image_path)
-                                                    @if (filter_var($history->item->image_path, FILTER_VALIDATE_URL))
-                                                        <img src="{{ $history->item->image_path }}"
-                                                            alt="{{ $history->item->name }}" class="img-fluid">
-                                                    @else
-                                                        <img src="{{ asset('storage/' . $history->item->image_path) }}"
-                                                            alt="{{ $history->item->name }}" class="img-fluid">
-                                                    @endif
-                                                @elseif (optional($history->tool)->image_path)
-                                                    @if (filter_var($history->tool->image_path, FILTER_VALIDATE_URL))
-                                                        <img src="{{ $history->tool->image_path }}"
-                                                            alt="{{ $history->tool->name }}" class="img-fluid">
-                                                    @else
-                                                        <img src="{{ asset('storage/' . $history->tool->image_path) }}"
-                                                            alt="{{ $history->tool->name }}" class="img-fluid">
-                                                    @endif
-                                                @else
-                                                    <p>Tidak ada gambar.</p>
-                                                @endif
-                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -160,16 +144,14 @@
                 </div>
             </div>
 
-            {{-- @dd($frequentlyOut, $newlyAdded) --}}
-
             <!-- Barang Keluar -->
             <div class="col-md-6 col-12">
                 <div class="card">
                     <div class="text-white card-header bg-danger">
-                        <h5>Barang Keluar</h5>
+                        <h5>Barang Diambil</h5>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive table-container">
                             <table class="table table-striped table-bordered">
                                 <thead class="table-primary">
                                     <tr>
@@ -184,26 +166,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($sOutHistories as $history)
+                                    {{-- @dd($takes) --}}
+                                    @foreach ($takes as $take)
                                         <tr>
                                             <td>{{ $loop->iteration }}.</td>
-                                            <td>{{ $history->item->name ?? $history->tool->name }}</td>
-                                            <td>{{ $history->user->name ?? $history->name }} -
-                                                {{ $history->division }}</td>
-                                            <td>{{ $history->previous_stock }}</td>
-                                            <td>{{ $history->qty }}</td>
-                                            <td>{{ $history->new_stock }}</td>
+                                            <td>{{ $take->item->name }}</td>
+                                            <td>{{ $take->name }} - {{ $take->division }}</td>
+                                            <td>{{ $take->previous_stock }}</td>
+                                            <td>{{ $take->qty }}</td>
+                                            <td>{{ $take->new_stock }}</td>
                                             <td>
-                                                @if ($history->type == 'take')
-                                                    <span class="badge bg-danger">Ambil</span>
-                                                @elseif ($history->type == 'loan')
-                                                    <span class="badge bg-warning">Pinjam</span>
-                                                @else
-                                                    <span class="badge bg-info">Hilang</span>
-                                                @endif
+                                                <span class="badge bg-danger">Ambil</span>
                                             </td>
-                                            </td>
-                                            <td>{{ $history->created_at->format('d/m/y, H:i') }}</td>
+                                            <td>{{ $take->created_at->format('d/m/y, H:i') }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -214,14 +189,15 @@
             </div>
         </div>
 
+        <!-- Barang Datang -->
         <div class="row mb-4">
-            <div class="col-12">
+            <div class="col-md-6 col-12">
                 <div class="card">
                     <div class="text-white card-header bg-success">
                         <h5>Barang Datang</h5>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive table-container">
                             <table class="table table-striped table-bordered">
                                 <thead class="table-primary">
                                     <tr>
@@ -250,14 +226,6 @@
                                                         <img src="{{ asset('storage/' . $iItem->image_path) }}"
                                                             alt="{{ $iItem->name }}" class="thumbnail-img">
                                                     @endif
-                                                @elseif (optional($iItem->tool)->image_path)
-                                                    @if (filter_var($iItem->tool->image_path, FILTER_VALIDATE_URL))
-                                                        <img src="{{ $iItem->tool->image_path }}"
-                                                            alt="{{ $iItem->tool->name }}" class="thumbnail-img">
-                                                    @else
-                                                        <img src="{{ asset('storage/' . $iItem->tool->image_path) }}"
-                                                            alt="{{ $iItem->tool->name }}" class="thumbnail-img">
-                                                    @endif
                                                 @else
                                                     <p>Tidak ada gambar.</p>
                                                 @endif
@@ -270,10 +238,52 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-6 col-12">
+                <div class="card">
+                    <div class="text-white card-header bg-danger">
+                        <h5>Tools Dipinjam</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive table-container">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Barang/Alat</th>
+                                        <th>Nama - Div</th>
+                                        <th>Sebelum</th>
+                                        <th>Jumlah</th>
+                                        <th>Sesudah</th>
+                                        <th>Tipe</th>
+                                        <th>Tanggal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($loans as $loan)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}.</td>
+                                            <td>{{ $loan->tool->name }}</td>
+                                            <td>{{ $loan->name }} - {{ $loan->division }}</td>
+                                            <td>{{ $loan->previous_stock }}</td>
+                                            <td>{{ $loan->qty }}</td>
+                                            <td>{{ $loan->new_stock }}</td>
+                                            <td>
+                                                <span class="badge bg-warning">Pinjam</span>
+                                            </td>
+                                            <td>{{ $loan->created_at->format('d/m/y, H:i') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Barang yang Baru Masuk -->
-        <div class="row">
+        <!-- Barang/Tool Baru -->
+        <div class="row mb-4">
             <div class="col-12">
                 <h4 class="mb-3">Barang/Tool Baru</h4>
                 <div class="row">
@@ -350,61 +360,61 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Barang yang Sering Keluar -->
-    <div class="mb-4 row">
-        <div class="col-12">
-            <h4 class="mb-3">Barang/Tool sering dipinjam/ambil</h4>
-            <div class="row">
-                @foreach ($frequentlyOut as $item)
-                    <div class="mb-4 col-md-3 col-12">
-                        <div class="card d-flex position-relative overflow-hidden">
-                            <!-- Gambar -->
-                            <div class="image-container">
-                                @if ($item->item_id && $item->item->image_path)
-                                    @if (filter_var($item->item->image_path, FILTER_VALIDATE_URL))
-                                        <img src="{{ $item->item->image_path }}" alt="{{ $item->item->name }}"
-                                            class="img-fluid h-100 w-100"
-                                            style="object-fit: cover; object-position: center;">
-                                    @else
-                                        <img src="{{ asset('storage/' . $item->item->image_path) }}"
-                                            alt="{{ $item->item->name }}" class="img-fluid h-100 w-100"
-                                            style="object-fit: cover; object-position: center;">
-                                    @endif
-                                @elseif ($item->tool_id && $item->tool->image_path)
-                                    @if (filter_var($item->tool->image_path, FILTER_VALIDATE_URL))
-                                        <img src="{{ $item->tool->image_path }}" alt="{{ $item->tool->name }}"
-                                            class="img-fluid h-100 w-100"
-                                            style="object-fit: cover; object-position: center;">
-                                    @else
-                                        <img src="{{ asset('storage/' . $item->tool->image_path) }}"
-                                            alt="{{ $item->tool->name }}" class="img-fluid h-100 w-100"
-                                            style="object-fit: cover; object-position: center;">
-                                    @endif
-                                @else
-                                    <div class="bg-light d-flex align-items-center justify-content-center h-100">
-                                        <p class="mb-0 text-muted">Tidak ada gambar</p>
-                                    </div>
-                                @endif
-
-                                <!-- Overlay -->
-                                <div class="overlay">
-                                    <h5 class="text-white text-center">
-                                        @if ($item->item_id)
-                                            {{ $item->item->name ?? 'Item tidak ditemukan' }}
-                                        @elseif ($item->tool_id)
-                                            {{ $item->tool->name ?? 'Tool tidak ditemukan' }}
+        <!-- Barang/Tool Sering Dipinjam/Ambil -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h4 class="mb-3">Barang/Tool Sering Dipinjam/Ambil</h4>
+                <div class="row">
+                    @foreach ($frequentlyOut as $item)
+                        <div class="mb-4 col-md-3 col-12">
+                            <div class="card d-flex position-relative overflow-hidden">
+                                <!-- Gambar -->
+                                <div class="image-container">
+                                    @if ($item->item_id && $item->item->image_path)
+                                        @if (filter_var($item->item->image_path, FILTER_VALIDATE_URL))
+                                            <img src="{{ $item->item->image_path }}" alt="{{ $item->item->name }}"
+                                                class="img-fluid h-100 w-100"
+                                                style="object-fit: cover; object-position: center;">
+                                        @else
+                                            <img src="{{ asset('storage/' . $item->item->image_path) }}"
+                                                alt="{{ $item->item->name }}" class="img-fluid h-100 w-100"
+                                                style="object-fit: cover; object-position: center;">
                                         @endif
-                                    </h5>
-                                    <p class="text-white text-center">
-                                        <strong>Jumlah Keluar:</strong> {{ $item->total }}
-                                    </p>
+                                    @elseif ($item->tool_id && $item->tool->image_path)
+                                        @if (filter_var($item->tool->image_path, FILTER_VALIDATE_URL))
+                                            <img src="{{ $item->tool->image_path }}" alt="{{ $item->tool->name }}"
+                                                class="img-fluid h-100 w-100"
+                                                style="object-fit: cover; object-position: center;">
+                                        @else
+                                            <img src="{{ asset('storage/' . $item->tool->image_path) }}"
+                                                alt="{{ $item->tool->name }}" class="img-fluid h-100 w-100"
+                                                style="object-fit: cover; object-position: center;">
+                                        @endif
+                                    @else
+                                        <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                                            <p class="mb-0 text-muted">Tidak ada gambar</p>
+                                        </div>
+                                    @endif
+
+                                    <!-- Overlay -->
+                                    <div class="overlay">
+                                        <h5 class="text-white text-center">
+                                            @if ($item->item_id)
+                                                {{ $item->item->name ?? 'Item tidak ditemukan' }}
+                                            @elseif ($item->tool_id)
+                                                {{ $item->tool->name ?? 'Tool tidak ditemukan' }}
+                                            @endif
+                                        </h5>
+                                        <p class="text-white text-center">
+                                            <strong>Jumlah Keluar:</strong> {{ $item->total }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
